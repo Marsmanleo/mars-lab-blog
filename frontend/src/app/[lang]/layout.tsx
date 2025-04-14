@@ -9,7 +9,6 @@ import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import {FALLBACK_SEO} from "@/app/[lang]/utils/constants";
 
-
 async function getGlobal(lang: string): Promise<any> {
   const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
 
@@ -46,33 +45,20 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   try {
-    const meta = await getGlobal(params.lang);
-
-    if (meta.data) {
-      const { metadata, favicon } = meta.data.attributes;
-      const { url } = favicon.data.attributes;
-      const faviconUrl = getStrapiMedia(url) || "/favicon.ico";
-
+    const global = await getGlobal(params.lang);
+    if (global.data) {
+      const metadata = global.data.attributes.metadata;
       return {
-        title: metadata.metaTitle,
-        description: metadata.metaDescription || "Default description",
-        icons: {
-          icon: [faviconUrl],
-        },
+        ...FALLBACK_SEO,
         metadataBase: new URL(getStrapiURL()),
-        charset: 'utf-8',
+        title: metadata?.metaTitle,
+        description: metadata?.metaDescription,
       };
     }
   } catch (error) {
     console.error("Error fetching metadata:", error);
   }
-
-  // Fallback metadata with required fields for when API data is unavailable
-  return {
-    ...FALLBACK_SEO,
-    metadataBase: new URL(getStrapiURL()),
-    charset: 'utf-8',
-  };
+  return FALLBACK_SEO;
 }
 
 export function generateViewport(): Viewport {
@@ -107,13 +93,15 @@ export default async function RootLayout({
       navbar = globalAttributes.navbar;
       footer = globalAttributes.footer;
       
-      navbarLogoUrl = getStrapiMedia(
-        navbar.navbarLogo.logoImg.data?.attributes.url
+      const navbarLogoMedia = getStrapiMedia(
+        navbar?.navbarLogo?.logoImg?.data?.attributes?.url
       );
+      navbarLogoUrl = navbarLogoMedia || "";
       
-      footerLogoUrl = getStrapiMedia(
-        footer.footerLogo.logoImg.data?.attributes.url
+      const footerLogoMedia = getStrapiMedia(
+        footer?.footerLogo?.logoImg?.data?.attributes?.url
       );
+      footerLogoUrl = footerLogoMedia || "";
     } else {
       hasError = true;
     }
@@ -121,6 +109,7 @@ export default async function RootLayout({
     console.error("Failed to load global data:", error);
     hasError = true;
   }
+
   return (
     <html lang={params.lang} suppressHydrationWarning>
       <body className="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
@@ -140,13 +129,10 @@ export default async function RootLayout({
               logoUrl={navbarLogoUrl}
               logoText={navbar?.navbarLogo?.logoText || ""}
             />
-  
             <main className="min-h-screen dark:bg-black dark:text-gray-100">
               {children}
             </main>
-  
             <Banner data={notificationBanner} />
-  
             <Footer
               logoUrl={footerLogoUrl}
               logoText={footer?.footerLogo?.logoText || ""}

@@ -18,12 +18,14 @@ export default function Profile() {
   const [meta, setMeta] = useState<Meta | undefined>();
   const [data, setData] = useState<any>([]);
   const [isLoading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(async (start: number, limit: number) => {
     setLoading(true);
+    setError(null);
     try {
-      const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-      const path = `/articles`;
+      const token = "5b8904ecb951a3c10e2c98f82c3d2f74f9a8e42d3ba107a4eba310eacfae125d7b2ed3f539986bd04b64b0e5fbfa3785c516b6667e05e4f18fbd7fcb93371679138375c20b01bbabd6eb64ea63714c4a5917cdc24ad9c26d95776f88ddb2b60cf6055886e8b396a638480f032e3b0e27dc4423cf674e07a974b41a85b84cbf39";
+      const path = "/articles";
       const urlParamsObject = {
         sort: { createdAt: "desc" },
         populate: {
@@ -44,34 +46,38 @@ export default function Profile() {
       if (start === 0) {
         setData(responseData.data);
       } else {
-        setData((prevData: any[] ) => [...prevData, ...responseData.data]);
+        setData((prevData: any[]) => [...prevData, ...responseData.data]);
       }
 
       setMeta(responseData.meta);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching blog posts:", error);
+      setError("Failed to load blog posts. Please try again later.");
     } finally {
       setLoading(false);
     }
   }, []);
 
   function loadMorePosts(): void {
-    const nextPosts = meta!.pagination.start + meta!.pagination.limit;
-    fetchData(nextPosts, Number(process.env.NEXT_PUBLIC_PAGE_LIMIT));
+    if (meta && meta.pagination) {
+      const nextPosts = meta.pagination.start + meta.pagination.limit;
+      fetchData(nextPosts, 10);
+    }
   }
 
   useEffect(() => {
-    fetchData(0, Number(process.env.NEXT_PUBLIC_PAGE_LIMIT));
+    fetchData(0, 10);
   }, [fetchData]);
 
   if (isLoading) return <Loader />;
+  if (error) return <div className="text-center text-red-600">{error}</div>;
 
   return (
     <div>
       <PageHeader heading="Our Blog" text="Checkout Something Cool" />
       <Blog data={data}>
-        {meta!.pagination.start + meta!.pagination.limit <
-          meta!.pagination.total && (
+        {meta && meta.pagination && 
+          meta.pagination.start + meta.pagination.limit < meta.pagination.total && (
           <div className="flex justify-center">
             <button
               type="button"
