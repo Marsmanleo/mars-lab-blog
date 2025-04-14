@@ -41,29 +41,45 @@ async function getMetaData(slug: string) {
     return response.data;
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-    const meta = await getMetaData(params.slug);
-    const metadata = meta[0].attributes.seo;
-
-    return {
-        title: metadata.metaTitle,
-        description: metadata.metaDescription,
-    };
-}
-
-export default async function PostRoute({ params }: { params: { slug: string } }) {
-    const { slug } = params;
-    const data = await getPostBySlug(slug);
-    if (data.data.length === 0) return <h2>no post found</h2>;
-    return <Post data={data.data[0]} />;
-}
-
 export async function generateStaticParams() {
-    const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-    const path = `/articles`;
-    const options = { headers: { Authorization: `Bearer ${token}` } };
-    const articleResponse = await fetchAPI(
-        path,
+    try {
+        const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+        const path = `/articles`;
+        const options = { headers: { Authorization: `Bearer ${token}` } };
+        const articleResponse = await fetchAPI(
+            path,
+            {
+                populate: ['category'],
+            },
+            options
+        );
+
+        if (!articleResponse?.data) {
+            return [];
+        }
+
+        return articleResponse.data.map(
+            (article: {
+                attributes: {
+                    slug: string;
+                    category: {
+                        data: {
+                            attributes: {
+                                slug: string;
+                            };
+                        };
+                    };
+                };
+            }) => ({
+                slug: article.attributes.slug,
+                category: article.attributes.category?.data?.attributes?.slug || 'uncategorized'
+            })
+        );
+    } catch (error) {
+        console.error('Error generating static params:', error);
+        return [];
+    }
+}
         {
             populate: ['category'],
         },
