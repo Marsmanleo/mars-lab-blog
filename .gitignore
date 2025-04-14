@@ -4,3 +4,26 @@ readme-images
 .DS_Store
 **/.yarn
 frontend/next.config.js
+
+# Development
+.env
+.env.development
+.env.production
+.tmp/
+.cache/
+dist/
+build/
+.strapi-updater.json
+
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+

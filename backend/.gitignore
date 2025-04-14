@@ -10,6 +10,14 @@ Icon
 .Trashes
 ._*
 
+############################
+# Environment Files
+############################
+.env
+.env.development
+.env.production
+.strapi-updater.json
+
 
 ############################
 # Linux
