@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Blog post routing changes
 - Security improvements
 
-## [v1.0.1] - 2024-01-24
+## [v1.0.1] - 2025-04-15
 
 ### Added
 - Enhanced frontend error handling and improved type safety (4f005fe)
@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - SEO attributes and defaultLocale handling ([#142](https://github.com/mars-lab/blog/pull/142))
 
-## [v1.0.0] - 2024-01-15
+## [v1.0.0] - 2025-04-15
 
 ### Added
 - Initial Mars Lab Blog setup with Next.js frontend and Strapi backend (06fd5de)
