@@ -20,14 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Enhanced frontend error handling and improved type safety (4f005fe)
-- Dynamic component loading ([#138](https://github.com/mars-lab/blog/pull/138))
+- Dynamic component loading ([#138](https://github.com/Marsmanleo/mars-lab-blog/pull/138))
 
 ### Changed
 - Updated frontend configuration and deployment scripts (409de8e)
-- Updated Strapi to version 4.25.6 ([#141](https://github.com/mars-lab/blog/pull/141))
+- Updated Strapi to version 4.25.6 ([#141](https://github.com/Marsmanleo/mars-lab-blog/pull/141))
 
 ### Fixed
-- SEO attributes and defaultLocale handling ([#142](https://github.com/mars-lab/blog/pull/142))
+- SEO attributes and defaultLocale handling ([#142](https://github.com/Marsmanleo/mars-lab-blog/pull/142))
 
 ## [v1.0.0] - 2025-04-15
 
@@ -35,6 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial Mars Lab Blog setup with Next.js frontend and Strapi backend (06fd5de)
 - Various README updates
 
-[Unreleased]: https://github.com/mars-lab/blog/compare/v1.0.1...HEAD
-[v1.0.1]: https://github.com/mars-lab/blog/compare/v1.0.0...v1.0.1
-[v1.0.0]: https://github.com/mars-lab/blog/releases/tag/v1.0.0
+[Unreleased]: https://github.com/Marsmanleo/mars-lab-blog/compare/v1.0.1...HEAD
+[v1.0.1]: https://github.com/Marsmanleo/mars-lab-blog/compare/v1.0.0...v1.0.1
+[v1.0.0]: https://github.com/Marsmanleo/mars-lab-blog/releases/tag/v1.0.0
