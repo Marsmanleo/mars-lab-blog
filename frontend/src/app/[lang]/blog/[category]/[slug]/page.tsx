@@ -80,20 +80,30 @@ export async function generateStaticParams() {
         return [];
     }
 }
-        {
-            populate: ['category'],
-        },
-        options
-    );
 
-    return articleResponse.data.map(
-        (article: {
-            attributes: {
-                slug: string;
-                category: {
-                    slug: string;
-                };
-            };
-        }) => ({ slug: article.attributes.slug, category: article.attributes.slug })
-    );
+export default async function PostRoute({
+    params,
+}: {
+    params: { slug: string };
+}) {
+    const { slug } = params;
+    const response = await getPostBySlug(slug);
+    if (response.data.length === 0) return <h2>no post found</h2>;
+    return <Post data={response.data[0]} />;
+}
+
+export async function generateMetadata({
+    params,
+}: {
+    params: { slug: string };
+}): Promise<Metadata> {
+    const meta = await getMetaData(params.slug);
+    if (!meta.length) return {};
+
+    const metadata = meta[0].attributes.seo;
+
+    return {
+        title: metadata.metaTitle,
+        description: metadata.metaDescription,
+    };
 }

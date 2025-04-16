@@ -1,7 +1,18 @@
 module.exports = [
   'strapi::errors',
   'strapi::security',
-  'strapi::cors',
+  {
+    name: 'strapi::cors',
+    config: {
+      enabled: true,
+      headers: ['Content-Type', 'Authorization', 'Origin', 'Accept'],
+      origin: ['https://mars-lab.ltd'],
+      expose: ['WWW-Authenticate', 'Server-Authorization'],
+      maxAge: 31536000,
+      credentials: true,
+      methods: ['GET', 'POST', 'OPTIONS']
+    }
+  },
   'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',
