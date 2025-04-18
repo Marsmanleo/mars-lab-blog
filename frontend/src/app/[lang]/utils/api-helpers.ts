@@ -12,8 +12,12 @@ export function getStrapiMedia(url: string | null) {
         return url;
     }
 
-    // Otherwise prepend the URL path with the Strapi URL
-    return `${getStrapiURL()}${url}`;
+    // Use the specific uploads URL if available, otherwise fall back to API URL
+    const baseUrl = process.env.NEXT_PUBLIC_STRAPI_UPLOADS_URL || process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337';
+    if (url.startsWith('/uploads/')) {
+        return `${baseUrl.replace('/uploads', '')}${url}`;
+    }
+    return `${baseUrl}${url}`;
 }
 
 export function formatDate(dateString: string) {
